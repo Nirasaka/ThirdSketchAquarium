@@ -1,173 +1,256 @@
-using UnityEngine;
+using Meta.XR.MRUtilityKit;
 using System.Collections.Generic;
+using UnityEngine;
+
+// サイズのカテゴリ
+public enum SizeCategory
+{
+    Small,
+    Medium,
+    Large
+}
 
 public class BoidsManager : MonoBehaviour
 {
+    public static BoidsManager Instance;
+
     // 魚のリスト
-    private List<FishAgent> fishAgents = new List<FishAgent>();
+    private HashSet<FishAgent> allFish = new HashSet<FishAgent>();
+    private Dictionary<SizeCategory, HashSet<FishAgent>> fishGroups;
+
+    [Header("サイズカテゴリの閾値")]
+    [Range(0.0f, 1.0f)]
+    public float mediumThreshold;
+
+    [Range(0.0f, 1.0f)]
+    public float largeThreshold;
 
     [Header("Boidsの設定")]
-    public float separationWeight = 1.5f;
+    [Range(0.0f, 2.0f)]
+    public float separationWeight;
 
-    public float alignmentWeight = 1.0f;
+    [Range(0.0f, 2.0f)]
+    public float alignmentWeight;
 
-    public float cohesionWeight = 1.0f;
+    [Range(0.0f, 2.0f)]
+    public float cohesionWeight;
 
-    public float neighborDistance = 1.0f;
+    [Range(1.0f, 10.0f)]
+    public float neighborDistance;
 
-    public float maxSteerForce = 1.0f;
+    // 検知範囲
+    [Range(1.0f, 5.0f)]
+    public float detectionRange;
 
+    [Range(0.0f,5.0f)]
+    public float maxSpeed;
+    [Range(0.0f, 5.0f)]
+    public float minSpeed;
+    [Range(1.0f, 5.0f)]
+    public float rotationSpeed;
 
     [Header("障害物回避の設定")]
-    public float obstacleAvoidanceWeight = 10.0f;
+    [Range(0.0f, 2.0f)]
+    public float obstacleAvoidanceWeight;
 
-    public float obstacleDetectionDistance = 1.0f;
+    [Range(0.0f, 2.0f)]
+    public float obstacleDetectionDistance;
 
-
-    [Header("ランダムウォーク設定")]
-    public float wanderWeight = 0.5f;
+    public Bounds roomLimit;
 
     [Header("ターゲット追従設定")]
-    public GameObject target;
+    public GameObject feed;
 
-    public float targetFollowWeight = 5f;
+    [Range(0.0f, 2.0f)]
+    public float targetFollowWeight;
+
+    private void Awake()
+    {
+        Instance = this;
+
+        fishGroups = new Dictionary<SizeCategory, HashSet<FishAgent>>
+        {
+            {SizeCategory.Small,    new HashSet<FishAgent>() },
+            {SizeCategory.Medium,   new HashSet<FishAgent>() },
+            {SizeCategory.Large,    new HashSet<FishAgent>() }
+        };
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // 初めから配置されている魚を取得
-        foreach (FishAgent fish in FindObjectsByType<FishAgent>(FindObjectsSortMode.None))
-        {
-            RegistFish(fish);
-        }
+        MRUK.Instance.RoomCreatedEvent.AddListener(SetRoomBounds);
+    }
+
+    // 部屋の境界を設定
+    void SetRoomBounds(MRUKRoom room)
+    {
+        room = MRUK.Instance.GetCurrentRoom();
+        roomLimit = room.GetRoomBounds();
+        roomLimit.size *= 0.9f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Boids計算
-        foreach (FishAgent fish in fishAgents)
+        if (allFish.Count > 0)
         {
-            fish.velocity += CalcBoids(fish);
-        }
+            foreach (FishAgent fish in allFish)
+            {
+                Vector3 direction = Vector3.zero;
 
-        // 移動処理
-        foreach(FishAgent fish in fishAgents)
-        {
-            fish.MoveAgent(Time.deltaTime);
+                // ランダムな速度を確率で与える
+                if(Random.Range(0, 100) < 10)
+                {
+                    fish.speed = Random.Range(minSpeed, maxSpeed);
+                }
+
+                // 部屋の大枠から外れたら戻す
+                if (!roomLimit.Contains(fish.transform.position))
+                {
+                    direction = roomLimit.center - fish.transform.position;
+                }
+                // 部屋の中にいる場合は各カテゴリーごとに泳がせる
+                else
+                {
+                    // 小さな魚は群れる
+                    if (fish.Category == SizeCategory.Small)
+                    {
+                        if (Random.Range(0, 100) < 20)
+                            direction = CalcBoid(fish);
+                    }
+                }
+
+                // 餌があればそちらに向かう
+                if (feed.activeSelf)
+                {
+                    direction += TowardFeed(fish);
+                }
+                
+                // 進行方向が定まっていれば滑らかに回転
+                if (direction != Vector3.zero)
+                {
+                    fish.transform.rotation = Quaternion.Slerp(fish.transform.rotation,
+                                            Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
+                }
+                // 現在の速度で前進
+                fish.transform.Translate(0, 0, fish.speed * Time.deltaTime);
+            }
         }
     }
 
-    // Boids計算
-    Vector3 CalcBoids(FishAgent fish)
+    // Boidsの計算
+    Vector3 CalcBoid(FishAgent fish)
     {
-        Vector3 directionToTarget = Vector3.zero;
-        Vector3 separation = Vector3.zero;          // 分離成分
-        Vector3 alignment = Vector3.zero;           // 整列成分
-        Vector3 cohesion = Vector3.zero;            // 結合成分
-        Vector3 obstacleAvoidance = Vector3.zero;   // 障害物回避成分
-        Vector3 wander = Vector3.zero;               // ランダムウォーク成分
+        Vector3 vCenter = Vector3.zero;
+        Vector3 vAvoid = Vector3.zero;
+        float gSpeed = 0.01f;
+        Vector3 direction = Vector3.zero;
+        int neighborCount = 0;
 
-        int neighborCount = 0;                      // 近くの魚の数
-        Vector3 averagePosition = Vector3.zero;     // 群れの平均位置
-        Vector3 averageHeading = Vector3.zero;      // 群れの平均進行方向
-
-        // 追いかける対象があれば
-        if(target != null)
+        foreach (FishAgent otherFish in fishGroups[fish.Category])
         {
-            Vector3 offset = target.transform.position - fish.transform.position;
-            if(offset.magnitude > fish.detectionRange)
-            {
-                directionToTarget = SteerTowards(fish, offset);
-            }
-        }
-
-        // 近くの魚を検出 & 分離成分の算出
-        foreach (FishAgent otherFish in fishAgents)
-        {
-            // 自身を除く
-            if (otherFish == fish) continue;
+            if(fish == otherFish) continue;
 
             float distance = Vector3.Distance(fish.transform.position, otherFish.transform.position);
-
-            // 検知範囲でなければ無視
-            if (distance < fish.detectionRange) continue;
-
-            if (distance < neighborDistance)
+            if(distance <= detectionRange)
             {
-                // 閾値より近いなら分離
-                separation += SteerTowards(fish, (fish.transform.position - otherFish.transform.position) / distance);
+                vCenter += otherFish.transform.position;
+                neighborCount++;
+
+                if(distance < neighborDistance)
+                {
+                    vAvoid += (fish.transform.position - otherFish.transform.position);
+                }
+                gSpeed += otherFish.speed;
             }
-
-            // 整列と結合のための計算
-            neighborCount++;
-            averageHeading += SteerTowards(fish, otherFish.velocity.normalized);
-            averagePosition += SteerTowards(fish, otherFish.transform.position);
-
         }
 
         if (neighborCount > 0)
         {
-            averagePosition /= neighborCount;
-            averageHeading /= neighborCount;
+            vCenter = vCenter / neighborCount * cohesionWeight;
+            vAvoid *= separationWeight;
+            fish.speed = gSpeed / neighborCount;
 
-            // 平均進行方向から整列成分を算出
-            alignment = averageHeading;
+            if(fish.speed > maxSpeed)
+            {
+                fish.speed = maxSpeed;
+            }
 
-            // 平均位置から結合成分を算出
-            cohesion = (averagePosition - fish.transform.position).normalized;
+            direction = ((vCenter + vAvoid) - fish.transform.position) * alignmentWeight;
         }
-        // 周囲に仲間がいない場合，放浪する
-        else
-        {
-            Vector3 wanderDirection = (fish.velocity.normalized + Random.onUnitSphere * 0.2f).normalized;
-            wander = SteerTowards(fish, wanderDirection);
-        }
-
-
-        //// 前方に障害物があれば回避
-        //RaycastHit hit;
-        //if (Physics.Raycast(fish.transform.position, fish.transform.forward, out hit, obstacleDetectionDistance))
-        //{
-        //    obstacleAvoidance = SteerTowards(fish, Vector3.Reflect(fish.transform.forward, hit.normal).normalized);
-        //}
-
-        // 全ての成分を合成
-        Vector3 acceleration = directionToTarget * targetFollowWeight +
-                               separation * separationWeight +
-                               alignment * alignmentWeight +
-                               cohesion * cohesionWeight +
-                               wander * wanderWeight +
-                               obstacleAvoidance * obstacleAvoidanceWeight;
-
-        Vector3 velocity = acceleration * Time.deltaTime;
-
-        // 速度を制限
-        float speed = Mathf.Clamp(velocity.magnitude, fish.minSpeed, fish.maxSpeed);
-
-        velocity = velocity.normalized * speed;
-
-        return velocity;
+        return direction;
     }
 
-    // 回転制限
-    private Vector3 SteerTowards(FishAgent fish, Vector3 targetDirection)
+    // 餌に近づく
+    Vector3 TowardFeed(FishAgent fish)
     {
-        if(targetDirection == Vector3.zero) return Vector3.zero;
 
-        Vector3 steer = targetDirection.normalized * fish.maxSpeed - fish.velocity;
-        return Vector3.ClampMagnitude(steer, maxSteerForce);
+        Vector3 direction = Vector3.zero;
+        Vector3 vAvoid = Vector3.zero;
+        float neighborCount = 0;
+
+        foreach(FishAgent otherFish in allFish)
+        {
+            if(fish == otherFish) continue;
+
+            float distance = Vector3.Distance(fish.transform.position, otherFish.transform.position);
+            if (distance <= detectionRange)
+            {
+                neighborCount++;
+                if (distance < neighborDistance)
+                {
+                    vAvoid += (fish.transform.position - otherFish.transform.position);
+                }
+            }
+        }
+
+
+
+        Vector3 feedDirection = feed.transform.position - fish.transform.position;
+        if (feedDirection.magnitude <= detectionRange)
+            direction = (vAvoid * separationWeight - fish.transform.position) + feedDirection * targetFollowWeight;
+
+        return direction;
     }
-
 
     // 魚の追加
     public void RegistFish(FishAgent fish)
     {
-        if (!fishAgents.Contains(fish))
-        {
-            fishAgents.Add(fish);
-            fish.velocity = fish.transform.forward * Random.Range(fish.minSpeed, fish.maxSpeed);
-            //fish.velocity = Random.onUnitSphere * Random.Range(fish.minSpeed, fish.maxSpeed);
-        }
+        allFish.Add(fish);
+        fishGroups[fish.Category].Add(fish);
+        fish.speed = Random.Range(minSpeed, maxSpeed);
+    }
+
+    public void UnregistFish(FishAgent fish)
+    {
+        allFish.Remove(fish);
+        fishGroups[fish.Category].Remove(fish);
+    }
+
+    // カテゴリを変更
+    public void ChangeCategory(FishAgent fish, SizeCategory oldCategory, SizeCategory newCategory)
+    {
+        if(oldCategory == newCategory) return;
+
+        fishGroups[oldCategory].Remove(fish);
+        fishGroups[newCategory].Add(fish);
+        Debug.Log(fish.Category);
+    }
+
+    // 指定のカテゴリの魚群を取得
+    public HashSet<FishAgent> GetGroup(SizeCategory category)
+    {
+        return fishGroups[category];
+    }
+
+    // サイズからカテゴリを選択
+    public SizeCategory GetCategory(float size)
+    {
+        if (size < mediumThreshold)
+            return SizeCategory.Small;
+        if(size < largeThreshold) 
+            return SizeCategory.Medium;
+        return SizeCategory.Large;
     }
 }
