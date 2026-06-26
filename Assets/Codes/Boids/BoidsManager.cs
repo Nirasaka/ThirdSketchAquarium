@@ -235,7 +235,7 @@ public class BoidsManager : MonoBehaviour
 
         fishGroups[oldCategory].Remove(fish);
         fishGroups[newCategory].Add(fish);
-        Debug.Log(fish.Category);
+        Debug.Log(fish.gameObject.name + ":" + fish.Category);
     }
 
     // Žw’è‚ÌƒJƒeƒSƒŠ‚Ì‹›ŒQ‚ðŽæ“¾
