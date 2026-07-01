@@ -85,6 +85,12 @@ namespace TriLibCore.Samples
                 fish_list = hashList.ToList()
             };
 
+            //Debug.Log("既に持っているリスト");
+            //foreach(string hash in req.fish_list)
+            //{
+            //    Debug.Log(" " + hash);
+            //}
+
             string jsonText = JsonUtility.ToJson(req);
             byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonText);
             var request = new UnityWebRequest(url, "POST");
@@ -96,14 +102,15 @@ namespace TriLibCore.Samples
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-
                 // 読み込みに失敗した場合，既存の魚から選出
+                Debug.LogError("読み込みに失敗したため，既存の魚から選出します");
                 SelectLocalZip();
                 yield break;
             }
             if (request.responseCode == 204)
             {
                 // 新規ファイルがなければ既存の魚から選出
+                Debug.LogError("新規の魚はいなかったため，既存の魚から選出します");
                 SelectLocalZip();
                 yield break;
             }
@@ -111,7 +118,7 @@ namespace TriLibCore.Samples
             {
                 // ダウンロードできたファイルからファイル名を保存
                 // 保存が終わったらTriLib2でロード 
-                UnityEngine.Debug.Log("Download is correct.");
+                UnityEngine.Debug.Log("ダウンロード成功");
                 string fileName = GetFileName(request);
 
                 if (string.IsNullOrEmpty(fileName))
@@ -121,6 +128,7 @@ namespace TriLibCore.Samples
                 }
 
                 string hash = Path.GetFileNameWithoutExtension(fileName);
+                Debug.Log("取得したハッシュ：" + hash);
 
                 string zipPath = Path.Combine(cacheDir, fileName);
                 File.WriteAllBytes(zipPath, request.downloadHandler.data);
@@ -297,6 +305,10 @@ namespace TriLibCore.Samples
                 obj.transform.Find("Armature").eulerAngles = new Vector3(-90, -90, 0);
             }
 
+            //if(hashList.Count < 10)
+            //{
+            //    OnDownloadButtonClick();
+            //}
         }
 
         /// <summary>
