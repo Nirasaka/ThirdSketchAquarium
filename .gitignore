@@ -75,3 +75,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 /[Aa]ssets/TriLib*
+/[Aa]ssets/Samples*
+/[Aa]ssets/TextMesh Pro*
+/[Aa]ssets/_Recovery*
