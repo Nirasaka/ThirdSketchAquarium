@@ -78,3 +78,4 @@ crashlytics-build.properties
 /[Aa]ssets/Samples*
 /[Aa]ssets/TextMesh Pro*
 /[Aa]ssets/_Recovery*
+test_BackUpThisFolder_ButDontShipItWithYourGame*

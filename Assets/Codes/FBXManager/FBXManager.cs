@@ -43,6 +43,9 @@ namespace TriLibCore.Samples
         private HashSet<string> hashList = new HashSet<string>();// ダウンロード済みの魚
         private string cacheDir;
 
+        private bool isGenerating = false;
+        public GameObject generatingDialog;
+
 
         /// <summary>
         /// Cached <see cref="AssetLoaderOptions"/> instance used to configure the model loading behavior.
@@ -55,7 +58,12 @@ namespace TriLibCore.Samples
             Directory.CreateDirectory(cacheDir);
             LoadLocalHashes();
 
-            OnDownloadButtonClick();
+            //OnDownloadButtonClick();
+        }
+
+        private void Update()
+        {
+            generatingDialog.SetActive(isGenerating);
         }
 
         /// <summary>
@@ -72,7 +80,11 @@ namespace TriLibCore.Samples
         public void OnDownloadButtonClick()
         {
             string url = "http://" + urlFBX.name + urlTail;
-            StartCoroutine(DownloadFile(url));
+            if (!isGenerating)
+            {
+                isGenerating = true;
+                StartCoroutine(DownloadFile(url));
+            }
         }
 
         IEnumerator DownloadFile(string url)
@@ -102,13 +114,29 @@ namespace TriLibCore.Samples
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                // 読み込みに失敗した場合，既存の魚から選出
+                // 一匹もリストにいない場合
+                if (hashList.Count <= 0)
+                {
+                    Debug.LogError("読み込みに失敗したため，終了");
+                    isGenerating = false;
+                    yield break;
+                }
+
+                // 読み込みに失敗した場合既存の魚から選出
                 Debug.LogError("読み込みに失敗したため，既存の魚から選出します");
                 SelectLocalZip();
                 yield break;
             }
             if (request.responseCode == 204)
             {
+                // 一匹もリストにいない場合
+                if (hashList.Count <= 0)
+                {
+                    Debug.LogError("読み込みに失敗したため，終了");
+                    isGenerating = false;
+                    yield break;
+                }
+
                 // 新規ファイルがなければ既存の魚から選出
                 Debug.LogError("新規の魚はいなかったため，既存の魚から選出します");
                 SelectLocalZip();
@@ -194,6 +222,7 @@ namespace TriLibCore.Samples
         }
         private void UseZip(string zipPath)
         {
+            isGenerating = false;
             Debug.Log($"魚を生成: {zipPath}");
             if (_assetLoaderOptions == null)
             {
