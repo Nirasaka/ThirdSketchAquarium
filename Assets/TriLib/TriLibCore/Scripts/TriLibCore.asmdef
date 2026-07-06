@@ -1,0 +1,28 @@
+{
+    "name": "TriLibCore",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b0b89af7d72c99846b660e1a71a4d4bc",
+        "GUID:ff827d8efcd8d8340ad60fa4b36f7cc4",
+        "GUID:b9c58988a54d32f44b0b8d5c1e2e6a02",
+        "GUID:1ba8f3d42ee065d47b58193815246409",
+        "GUID:30133c4db9981fd4fbe905570b892b2c",
+        "GUID:6a350d8924b675a46a69c38489bdd88f",
+        "GUID:95338160946604b419bd49cbe3c2358c",
+        "GUID:d61b7206681a06a4da709f2e101d271c",
+        "GUID:6af1de7d724cb3149b7d22ac580fa5a0",
+        "GUID:358d40ed513de044683f746c5f9857aa",
+        "GUID:57ea556f5b6da1f45b2f4733dd5eae3f",
+        "GUID:572dfa1e10da26449845c1af6f87f263",
+        "GUID:9a0f4f1535427c64bb6e3ea2c7818417"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

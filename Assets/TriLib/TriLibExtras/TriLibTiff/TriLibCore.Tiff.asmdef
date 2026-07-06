@@ -1,0 +1,18 @@
+{
+    "name": "TriLibCore.Tiff",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6af1de7d724cb3149b7d22ac580fa5a0",
+        "GUID:26b02a6eca22507498dfe650eb69703c",
+        "GUID:03d874735ba5df54ba9cead7a8053749"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

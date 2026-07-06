@@ -1,0 +1,15 @@
+{
+    "name": "TriLibCore.Source",
+    "rootNamespace": "",
+    "references": [
+        "GUID:572dfa1e10da26449845c1af6f87f263"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "versionDefines": [],
+    "noEngineReferences": false
+}

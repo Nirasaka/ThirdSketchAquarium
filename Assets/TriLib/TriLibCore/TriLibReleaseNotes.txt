@@ -1,0 +1,3 @@
+﻿2.6.4:
+- Fixed glTF2 parsing issue.
+- Performance fixes.

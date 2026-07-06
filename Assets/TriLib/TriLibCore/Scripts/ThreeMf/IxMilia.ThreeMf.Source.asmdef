@@ -1,0 +1,15 @@
+{
+    "name": "IxMilia.ThreeMf.Source",
+    "rootNamespace": "",
+    "references": [
+        "GUID:57ea556f5b6da1f45b2f4733dd5eae3f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "versionDefines": [],
+    "noEngineReferences": false
+}
