@@ -75,7 +75,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 /[Aa]ssets/Samples*
-/[Aa]ssets/TextMesh Pro*
 /[Aa]ssets/_Recovery*
 test_BackUpThisFolder_ButDontShipItWithYourGame*
 ThirdSketchAquarium Test_BurstDebugInformation_DoNotShip/tempburstlibs/arm64-v8a/lib_burst_generated.txt
