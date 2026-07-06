@@ -222,11 +222,29 @@ public class BoidsManager : MonoBehaviour
         fish.speed = Random.Range(minSpeed, maxSpeed);
     }
 
+    // 魚をリストから削除
     public void UnregistFish(FishAgent fish)
     {
         allFish.Remove(fish);
         fishGroups[fish.Category].Remove(fish);
     }
+
+    // 魚を消す
+    public void DeleteFish(FishAgent fish)
+    {
+        UnregistFish(fish);
+        Destroy(fish.gameObject);
+    }
+
+    // 全ての魚を消す
+    public void DeleteAllFish()
+    {
+        foreach(FishAgent fish in allFish)
+        {
+            DeleteFish(fish);
+        }
+    }
+
 
     // カテゴリを変更
     public void ChangeCategory(FishAgent fish, SizeCategory oldCategory, SizeCategory newCategory)
@@ -235,7 +253,7 @@ public class BoidsManager : MonoBehaviour
 
         fishGroups[oldCategory].Remove(fish);
         fishGroups[newCategory].Add(fish);
-        Debug.Log(fish.Category);
+        Debug.Log(fish.gameObject.name + ":" + fish.Category);
     }
 
     // 指定のカテゴリの魚群を取得
