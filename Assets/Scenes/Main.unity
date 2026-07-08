@@ -914,7 +914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &188293818
 Transform:
   m_ObjectHideFlags: 0
@@ -9204,7 +9204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1398069632
 Transform:
   m_ObjectHideFlags: 0
@@ -10945,8 +10945,10 @@ MonoBehaviour:
   roomLimit:
     m_Center: {x: 0, y: 1, z: 0}
     m_Extent: {x: 5, y: 5, z: 5}
-  feed: {fileID: 714937012}
-  targetFollowWeight: 2
+  Feeding: {fileID: 714937012}
+  target: {fileID: 215925861}
+  targetFollowWeight: 1
+  feed_distanse: 1
 --- !u!4 &1635061188
 Transform:
   m_ObjectHideFlags: 0
@@ -11203,7 +11205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1673328352
 Transform:
   m_ObjectHideFlags: 0
@@ -11703,7 +11705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1791704332
 Transform:
   m_ObjectHideFlags: 0
@@ -12305,7 +12307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d2705674196dfc4da9c25fbacda72d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.ActiveStateUnityEventWrapper
-  _activeState: {fileID: 2013308263}
+  _activeState: {fileID: 2013308264}
   _whenActivated:
     m_PersistentCalls:
       m_Calls:
@@ -12440,7 +12442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2070998824
 Transform:
   m_ObjectHideFlags: 0
