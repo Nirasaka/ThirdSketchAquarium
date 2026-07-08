@@ -59,7 +59,7 @@ public class BoidsManager : MonoBehaviour
     public Bounds roomLimit;
 
     [Header("ƒ^[ƒQƒbƒg’Ç]İ’è")]
-    public GameObject feed;
+    public Feeding feed;
 
     [Range(0.0f, 2.0f)]
     public float targetFollowWeight;
@@ -122,7 +122,7 @@ public class BoidsManager : MonoBehaviour
                 }
 
                 // ‰a‚ª‚ ‚ê‚Î‚»‚¿‚ç‚ÉŒü‚©‚¤
-                if (feed.activeSelf)
+                if (feed.isHandDetected)
                 {
                     direction += TowardFeed(fish);
                 }
@@ -270,5 +270,10 @@ public class BoidsManager : MonoBehaviour
         if(size < largeThreshold) 
             return SizeCategory.Medium;
         return SizeCategory.Large;
+    }
+
+    public int CountFish()
+    {
+        return allFish.Count;
     }
 }

@@ -1,11 +1,15 @@
-using UnityEngine;
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public class EnterText : MonoBehaviour
 {
     public TextMeshProUGUI textBox;
     public GameObject ip;
+
+    public HideAfterSeconds success;
+    public HideAfterSeconds failure;
 
     private float longPressTime = 0.8f;
     private float repeatInterval = 0.1f;
@@ -67,7 +71,26 @@ public class EnterText : MonoBehaviour
 
     public void Enter()
     {
+        var request = new UnityWebRequest("http://" + textBox.text + ":5000/hello", "GET");
+
         ip.name = textBox.text;
+    }
+
+    IEnumerator CheckAdress(string url)
+    {
+        using var request = UnityWebRequest.Get(url);
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("ê⁄ë±é∏îs");
+            failure.Show();
+        }
+        else
+        {
+            success.Show();
+        }
     }
 
 

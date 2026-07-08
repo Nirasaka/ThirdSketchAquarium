@@ -7,12 +7,13 @@ public class ToggleShow : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void Toggle()
@@ -38,6 +39,7 @@ public class ToggleShow : MonoBehaviour
 
             this.transform.position = spawnPosition;
             this.transform.LookAt(mainCamera.transform);
+            this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
         }
     }
 }
