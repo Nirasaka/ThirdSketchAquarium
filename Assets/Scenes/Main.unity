@@ -452,7 +452,6 @@ GameObject:
   - component: {fileID: 77067757}
   - component: {fileID: 77067760}
   - component: {fileID: 77067759}
-  - component: {fileID: 77067758}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -475,29 +474,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1673328352}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!136 &77067758
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 77067756}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &77067759
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6125,6 +6101,57 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944819182}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &959072739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 959072740}
+  - component: {fileID: 959072741}
+  m_Layer: 0
+  m_Name: Environment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &959072740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959072739}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.23824, y: -0.4575, z: -0.07578}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1279111577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &959072741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959072739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91de2bca1ab75094088be96bfde75c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SetProps
+  numOfProps: 15
+  numOfError: 20
+  prefabs:
+  - {fileID: 3718966172605549877, guid: b35965610d6e33b4dacfa387cfa6f272, type: 3}
+  - {fileID: 3323677358952912847, guid: a1d1a286acf1c054d8387283d804e420, type: 3}
+  - {fileID: 4344472076675962687, guid: b6216e1d6782296438a0720f344f08a6, type: 3}
+  labels: 1945
 --- !u!1 &960304702
 GameObject:
   m_ObjectHideFlags: 0
@@ -6136,7 +6163,6 @@ GameObject:
   - component: {fileID: 960304703}
   - component: {fileID: 960304706}
   - component: {fileID: 960304705}
-  - component: {fileID: 960304704}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -6159,27 +6185,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1673328352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &960304704
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 960304702}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &960304705
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7475,7 +7480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1154524603}
   m_Layer: 0
-  m_Name: 150.89.239.35
+  m_Name: 150.89.239.54
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8376,7 +8381,19 @@ MonoBehaviour:
       m_Calls: []
   <RoomCreatedEvent>k__BackingField:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 959072741}
+        m_TargetAssemblyTypeName: SetProps, Assembly-CSharp
+        m_MethodName: OnSpaceReady
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   <RoomUpdatedEvent>k__BackingField:
     m_PersistentCalls:
       m_Calls: []
@@ -8496,6 +8513,7 @@ Transform:
   - {fileID: 2114698827}
   - {fileID: 1635061188}
   - {fileID: 714937011}
+  - {fileID: 959072740}
   - {fileID: 862027587}
   - {fileID: 1617043397}
   m_Father: {fileID: 0}
@@ -10948,7 +10966,7 @@ MonoBehaviour:
   Feeding: {fileID: 714937012}
   target: {fileID: 215925861}
   targetFollowWeight: 1
-  feed_distanse: 1
+  feed_distance: 1
 --- !u!4 &1635061188
 Transform:
   m_ObjectHideFlags: 0
@@ -11199,13 +11217,17 @@ GameObject:
   m_Component:
   - component: {fileID: 1673328352}
   - component: {fileID: 1673328353}
+  - component: {fileID: 1673328355}
+  - component: {fileID: 1673328354}
+  - component: {fileID: 1673328357}
+  - component: {fileID: 1673328356}
   m_Layer: 0
   m_Name: Fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1673328352
 Transform:
   m_ObjectHideFlags: 0
@@ -11237,6 +11259,116 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FishAgent
   Category: 0
   speed: 0
+--- !u!54 &1673328354
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673328351}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1673328355
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673328351}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.1, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0.023}
+--- !u!114 &1673328356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673328351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baed3e011583e1844a6e85b1cd0657f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.HandGrab.DistanceHandGrabInteractable
+  _interactorFilters: []
+  _maxInteractors: -1
+  _maxSelectingInteractors: -1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 1673328357}
+  _rigidbody: {fileID: 1673328354}
+  _physicsGrabbable: {fileID: 0}
+  _resetGrabOnGrabsUpdated: 1
+  _slippiness: 0
+  _supportedGrabTypes: 1
+  _pinchGrabRules:
+    _thumbRequirement: 1
+    _indexRequirement: 1
+    _middleRequirement: 1
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 0
+  _palmGrabRules:
+    _thumbRequirement: 1
+    _indexRequirement: 2
+    _middleRequirement: 2
+    _ringRequirement: 2
+    _pinkyRequirement: 1
+    _unselectMode: 0
+  _movementProvider: {fileID: 0}
+  _handAligment: 1
+  _handGrabPoses: []
+--- !u!114 &1673328357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673328351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.Grabbable
+  _transferOnSecondSelection: 0
+  _addNewPointsToFront: 0
+  _forwardElement: {fileID: 0}
+  _oneGrabTransformer: {fileID: 0}
+  _twoGrabTransformer: {fileID: 0}
+  _targetTransform: {fileID: 1673328352}
+  _maxGrabPoints: -1
+  _rigidbody: {fileID: 1673328354}
+  _kinematicWhileSelected: 1
+  _throwWhenUnselected: 1
+  _forceKinematicDisabled: 0
 --- !u!1 &1683715691
 GameObject:
   m_ObjectHideFlags: 0

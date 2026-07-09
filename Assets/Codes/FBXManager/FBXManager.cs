@@ -276,6 +276,8 @@ namespace TriLibCore.Samples
             GameObject obj = assetLoaderContext.RootGameObject;
             SkinnedMeshRenderer smr = obj.GetComponentInChildren<SkinnedMeshRenderer>();
 
+            obj.transform.Find("Armature").eulerAngles = new Vector3(-90, -90, 0);
+
             // アニメーション付与
             // ボーンの数が3つのときと4つのときで付与するアニメーションを変更
             RuntimeAnimatorController controller;
@@ -293,8 +295,6 @@ namespace TriLibCore.Samples
             // エージェント化
             obj.AddComponent<FishAgent>();
 
-            // Rigidbody付与
-            obj.AddComponent<Rigidbody>();
 
             // シェーダー変更
             foreach(var mat in smr.materials)
@@ -309,20 +309,7 @@ namespace TriLibCore.Samples
             obj.GetComponent<BoxCollider>().isTrigger = true;
             obj.GetComponent<BoxCollider>().excludeLayers = LayerMask.GetMask("Player");
 
-            // つかみ判定関係のコンポーネントを追加
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            rb.useGravity = false;
-
-            if (rb != null)
-            {
-                Grabbable gb = obj.AddComponent<Grabbable>();
-                gb.InjectOptionalRigidbody(rb);
-
-                HandGrabInteractable dhgi = obj.AddComponent<HandGrabInteractable>();
-                dhgi.InjectRigidbody(rb);
-                dhgi.InjectOptionalPointableElement(gb);
-                dhgi.HandAlignment = HandAlignType.None;
-            }
+            obj.AddComponent<AddGrabbable>();
 
             // カメラの前に配置
             UnityEngine.Camera mainCamera = UnityEngine.Camera.main;
@@ -331,7 +318,6 @@ namespace TriLibCore.Samples
                 Vector3 cameraForward = mainCamera.transform.forward;
                 Vector3 spawnPosition = mainCamera.transform.position + cameraForward * distanceFromCamera;
                 obj.transform.position = spawnPosition;
-                obj.transform.Find("Armature").eulerAngles = new Vector3(-90, -90, 0);
             }
 
             //if(hashList.Count < 10)
