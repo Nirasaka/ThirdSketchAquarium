@@ -66,7 +66,7 @@ public class BoidsManager : MonoBehaviour
     [Range(0.0f, 2.0f)]
     public float targetFollowWeight;
 
-    public float feed_distanse = 1.0f;
+    public float feed_distance = 1.0f;
 
     private void Awake()
     {
@@ -212,7 +212,7 @@ public class BoidsManager : MonoBehaviour
 
 
         Vector3 feedDirection = target.transform.position - fish.transform.position;
-        if (feedDirection.magnitude >= feed_distanse)
+        if (feedDirection.magnitude >= feed_distance)
             direction = (vAvoid * separationWeight - fish.transform.position) + feedDirection * targetFollowWeight;
 
         return direction;
