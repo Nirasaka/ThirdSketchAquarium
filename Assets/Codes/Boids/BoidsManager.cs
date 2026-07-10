@@ -15,8 +15,8 @@ public class BoidsManager : MonoBehaviour
     public static BoidsManager Instance;
 
     // 魚のリスト
-    private HashSet<FishAgent> allFish = new HashSet<FishAgent>();
-    private Dictionary<SizeCategory, HashSet<FishAgent>> fishGroups;
+    private List<FishAgent> allFish = new List<FishAgent>();
+    private Dictionary<SizeCategory, List<FishAgent>> fishGroups;
 
     [Header("サイズカテゴリの閾値")]
     [Range(0.0f, 1.0f)]
@@ -72,11 +72,11 @@ public class BoidsManager : MonoBehaviour
     {
         Instance = this;
 
-        fishGroups = new Dictionary<SizeCategory, HashSet<FishAgent>>
+        fishGroups = new Dictionary<SizeCategory, List<FishAgent>>
         {
-            {SizeCategory.Small,    new HashSet<FishAgent>() },
-            {SizeCategory.Medium,   new HashSet<FishAgent>() },
-            {SizeCategory.Large,    new HashSet<FishAgent>() }
+            {SizeCategory.Small,    new List<FishAgent>() },
+            {SizeCategory.Medium,   new List<FishAgent>() },
+            {SizeCategory.Large,    new List<FishAgent>() }
         };
     }
 
@@ -243,9 +243,16 @@ public class BoidsManager : MonoBehaviour
     // 全ての魚を消す
     public void DeleteAllFish()
     {
-        foreach(FishAgent fish in allFish)
+        //foreach(FishAgent fish in allFish)
+        //{
+        //    DeleteFish(fish);
+        //}
+
+        int i = allFish.Count - 1;
+
+        for(;  i >= 0; i--)
         {
-            DeleteFish(fish);
+            DeleteFish(allFish[i]);
         }
     }
 
@@ -261,7 +268,7 @@ public class BoidsManager : MonoBehaviour
     }
 
     // 指定のカテゴリの魚群を取得
-    public HashSet<FishAgent> GetGroup(SizeCategory category)
+    public List<FishAgent> GetGroup(SizeCategory category)
     {
         return fishGroups[category];
     }

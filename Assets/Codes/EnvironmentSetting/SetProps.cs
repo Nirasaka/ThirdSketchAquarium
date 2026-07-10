@@ -22,9 +22,9 @@ public class SetProps : MonoBehaviour
         int error = 0;
         while (i < numOfProps || error < maxNumOfError)
         {
-            if (currentRoom.GenerateRandomPositionOnSurface(MRUK.SurfaceType.FACING_UP, 0.1f, labelFilter, out pos, out normal))
+            if (currentRoom.GenerateRandomPositionOnSurface(MRUK.SurfaceType.FACING_UP, 0.05f, labelFilter, out pos, out normal))
             {
-                if (currentRoom.IsPositionInRoom(pos))
+                if (currentRoom.IsPositionInRoom(pos) && !currentRoom.IsPositionInSceneVolume(pos))
                 {
                     Instantiate(prefabs[ i % 3 ], pos, Quaternion.identity);
                     //Debug.Log("”z’uŠ®—¹");

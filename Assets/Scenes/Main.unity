@@ -6146,7 +6146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetProps
   numOfProps: 15
-  numOfError: 20
+  maxNumOfError: 20
   prefabs:
   - {fileID: 3718966172605549877, guid: b35965610d6e33b4dacfa387cfa6f272, type: 3}
   - {fileID: 3323677358952912847, guid: a1d1a286acf1c054d8387283d804e420, type: 3}
@@ -8428,7 +8428,7 @@ MonoBehaviour:
     <TrackableRemoved>k__BackingField:
       m_PersistentCalls:
         m_Calls: []
-    DataSource: 2
+    DataSource: 0
     RoomIndex: -1
     RoomPrefabs:
     - {fileID: 5618556046422172173, guid: 4b454e8ccd6764ccdbcd91586969863f, type: 3}
@@ -11227,7 +11227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1673328352
 Transform:
   m_ObjectHideFlags: 0
@@ -11899,7 +11899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76943ac7e7394f3e969f0c048b26639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnOnStart: 1
+  SpawnOnStart: 0
   MeshMaterial: {fileID: 2100000, guid: 599b01c5f1d17436c89b88cc04257314, type: 2}
   BarycentricCoordinatesEnabled: 0
   Colliders: 0

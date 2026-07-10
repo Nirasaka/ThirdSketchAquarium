@@ -20,6 +20,7 @@ public class AddGrabbable : MonoBehaviour
         {
             Grabbable gb = obj.AddComponent<Grabbable>();
             gb.InjectOptionalRigidbody(rb);
+            gb.InjectOptionalThrowWhenUnselected(false);
 
             //HandGrabInteractable hgb = obj.AddComponent<HandGrabInteractable>();
             //hgb.InjectRigidbody(rb);
