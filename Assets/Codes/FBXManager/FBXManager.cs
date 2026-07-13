@@ -280,15 +280,7 @@ namespace TriLibCore.Samples
 
             // アニメーション付与
             // ボーンの数が3つのときと4つのときで付与するアニメーションを変更
-            RuntimeAnimatorController controller;
-            if (smr.bones.Length < 4)
-            {
-                controller = Resources.Load<RuntimeAnimatorController>("MoveTailFor3Tails");
-            }
-            else
-            {
-                controller = Resources.Load<RuntimeAnimatorController>("MoveTailFor4Tails");
-            }
+            RuntimeAnimatorController controller = Resources.Load<RuntimeAnimatorController>("MoveTailFor3Tails");
             Animator anim = obj.AddComponent<Animator>();
             anim.runtimeAnimatorController = controller;
 

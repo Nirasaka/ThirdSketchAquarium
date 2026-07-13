@@ -10965,8 +10965,8 @@ MonoBehaviour:
     m_Extent: {x: 5, y: 5, z: 5}
   Feeding: {fileID: 714937012}
   target: {fileID: 215925861}
-  targetFollowWeight: 1
-  feed_distance: 1
+  targetFollowWeight: 2
+  feed_distance: 0
 --- !u!4 &1635061188
 Transform:
   m_ObjectHideFlags: 0
