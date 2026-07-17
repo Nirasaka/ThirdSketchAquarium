@@ -10,6 +10,13 @@ public class SetProps : MonoBehaviour
     public List<GameObject> prefabs;
     public MRUKAnchor.SceneLabels labels;
 
+    private GameObject parent;
+
+    public void Start()
+    {
+        parent = new GameObject("Props");
+    }
+
     public void OnSpaceReady()
     {
         var currentRoom = MRUK.Instance.GetCurrentRoom();
@@ -26,7 +33,7 @@ public class SetProps : MonoBehaviour
             {
                 if (currentRoom.IsPositionInRoom(pos) && !currentRoom.IsPositionInSceneVolume(pos))
                 {
-                    Instantiate(prefabs[ i % 3 ], pos, Quaternion.identity);
+                    Instantiate(prefabs[ i % 3 ], pos, Quaternion.identity, parent.transform);
                     //Debug.Log("”z’uŠ®—¹");
                     i++;
                 }
@@ -42,5 +49,14 @@ public class SetProps : MonoBehaviour
                 error++;
             }
         }
+    }
+
+    public void DeleteAllProps()
+    {
+        for(int i = parent.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(parent.transform.GetChild(i).gameObject);
+        }
+        parent.transform.DetachChildren();
     }
 }

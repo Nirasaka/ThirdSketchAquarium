@@ -18,6 +18,8 @@ public class BoidsManager : MonoBehaviour
     private List<FishAgent> allFish = new List<FishAgent>();
     private Dictionary<SizeCategory, List<FishAgent>> fishGroups;
 
+    private Animator animator;
+
     [Header("サイズカテゴリの閾値")]
     [Range(0.0f, 1.0f)]
     public float mediumThreshold;
@@ -84,6 +86,8 @@ public class BoidsManager : MonoBehaviour
     void Start()
     {
         MRUK.Instance.RoomCreatedEvent.AddListener(SetRoomBounds);
+
+        animator = GetComponent<Animator>();
     }
 
     // 部屋の境界を設定
@@ -107,6 +111,7 @@ public class BoidsManager : MonoBehaviour
                 if(Random.Range(0, 100) < 10)
                 {
                     fish.speed = Random.Range(minSpeed, maxSpeed);
+                    animator.SetFloat("TailSpeed", fish.speed);
                 }
 
                 // 部屋の大枠から外れたら戻す
