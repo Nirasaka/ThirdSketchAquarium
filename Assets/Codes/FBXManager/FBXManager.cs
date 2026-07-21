@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -57,6 +58,7 @@ namespace TriLibCore.Samples
             cacheDir = Path.Combine(Application.persistentDataPath, "ZipCache");
             Directory.CreateDirectory(cacheDir);
             LoadLocalHashes();
+            Debug.Log(cacheDir);
 
             //OnDownloadButtonClick();
         }
@@ -64,6 +66,26 @@ namespace TriLibCore.Samples
         private void Update()
         {
             generatingDialog.SetActive(isGenerating);
+        }
+
+        public void InitHashList(HashSet<string> keepList)
+        {
+            if (keepList != null)
+            {
+                var deletes = hashList.Except(keepList);
+                foreach (string deletefile in deletes)
+                {
+                    string path = Path.Combine(cacheDir, deletefile + ".zip");
+                    Debug.Log("削除パス：" + path);
+                    if (File.Exists(path))
+                    {
+                        Debug.Log("ファイルを削除：" + deletefile);
+                        File.Delete(path);
+                    }
+                }
+
+                hashList.IntersectWith(keepList);
+            }
         }
 
         /// <summary>
@@ -192,8 +214,7 @@ namespace TriLibCore.Samples
         {
             foreach (string file in Directory.GetFiles(cacheDir, "*.zip"))
             {
-                string hash =
-                    Path.GetFileNameWithoutExtension(file);
+                string hash = Path.GetFileNameWithoutExtension(file);
 
                 hashList.Add(hash);
             }

@@ -1,5 +1,9 @@
+using Meta.WitAi.Json;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using TriLibCore.Samples;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,6 +14,8 @@ public class EnterText : MonoBehaviour
 
     public HideAfterSeconds success;
     public HideAfterSeconds failure;
+
+    public FBXManager FBXM;
 
     private float longPressTime = 0.8f;
     private float repeatInterval = 0.1f;
@@ -71,9 +77,13 @@ public class EnterText : MonoBehaviour
 
     public void Enter()
     {
-        var request = new UnityWebRequest("http://" + textBox.text + ":5000/hello", "GET");
+        StartCoroutine(CheckAdress("http://" + textBox.text + ":5000/download/defaultlist"));
+    }
 
-        ip.name = textBox.text;
+    [System.Serializable]
+    private class JsonData
+    {
+        public string[] defaultlist;
     }
 
     IEnumerator CheckAdress(string url)
@@ -84,12 +94,16 @@ public class EnterText : MonoBehaviour
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("ê⁄ë±é∏îs");
             failure.Show();
         }
         else
         {
             success.Show();
+            ip.name = textBox.text;
+
+            string json = request.downloadHandler.text;
+            JsonData data = JsonUtility.FromJson<JsonData>(json);
+            FBXM.InitHashList(new HashSet<string>(data.defaultlist));
         }
     }
 
