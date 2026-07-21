@@ -1,2 +1,2 @@
-現在作成中のMRシステム
-過去に行った研究の継続研究
+ThirdSketchAquariumのUnityデータ
+サーバはTSA_pythonEnvironmentにあります
