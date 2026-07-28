@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using TriLibCore.Samples;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.Networking;
 
