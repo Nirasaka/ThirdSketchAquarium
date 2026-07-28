@@ -4,6 +4,7 @@ using UnityEngine;
 public class FishAgent : MonoBehaviour
 {
     public SizeCategory Category = SizeCategory.Small;
+    public Animator animator;
 
     // 速度ベクトル
     public float speed;
@@ -13,6 +14,8 @@ public class FishAgent : MonoBehaviour
         Categorize();
 
         BoidsManager.Instance.RegistFish(this);
+
+        animator = GetComponent<Animator>();
     }
 
     void Update()

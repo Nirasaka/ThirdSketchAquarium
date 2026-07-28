@@ -145,7 +145,7 @@ namespace TriLibCore.Samples
                 }
 
                 // 読み込みに失敗した場合既存の魚から選出
-                Debug.LogError("読み込みに失敗したため，既存の魚から選出します");
+                Debug.Log("読み込みに失敗したため，既存の魚から選出します");
                 SelectLocalZip();
                 yield break;
             }
@@ -160,7 +160,7 @@ namespace TriLibCore.Samples
                 }
 
                 // 新規ファイルがなければ既存の魚から選出
-                Debug.LogError("新規の魚はいなかったため，既存の魚から選出します");
+                Debug.Log("新規の魚はいなかったため，既存の魚から選出します");
                 SelectLocalZip();
                 yield break;
             }
