@@ -104,7 +104,7 @@ public class BoidsManager : MonoBehaviour
                 Vector3 direction = Vector3.zero;
 
                 // ƒ‰ƒ“ƒ_ƒ€‚È‘¬“x‚ðŠm—¦‚Å—^‚¦‚é
-                if(Random.Range(0, 100) < 10)
+                if(Random.Range(0, 100) < 5)
                 {
                     fish.speed = Random.Range(minSpeed, maxSpeed);
                     fish.animator.SetFloat("TailSpeed", fish.speed);

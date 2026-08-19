@@ -20,21 +20,26 @@ public class AddGrabbable : MonoBehaviour
 
         if (rb != null)
         {
+            // Grabbable
             Grabbable gb = obj.AddComponent<Grabbable>();
             gb.InjectOptionalRigidbody(rb);
             gb.InjectOptionalThrowWhenUnselected(false);
 
-            //HandGrabInteractable hgb = obj.AddComponent<HandGrabInteractable>();
-            //hgb.InjectRigidbody(rb);
-            //hgb.InjectOptionalPointableElement(gb);
+            // ãﬂÇ¢Ç∆Ç´Ç…íÕÇﬂÇÈ
+            HandGrabInteractable hgb = obj.AddComponent<HandGrabInteractable>();
+            hgb.InjectRigidbody(rb);
+            hgb.InjectOptionalPointableElement(gb);
+            hgb.ResetGrabOnGrabsUpdated = false;
+            hgb.HandAlignment = HandAlignType.None;
 
+            // âìÇ≠ÇƒÇ‡íÕÇﬂÇÈ
             DistanceHandGrabInteractable dhgb = obj.AddComponent<DistanceHandGrabInteractable>();
             dhgb.InjectRigidbody(rb);
             dhgb.InjectOptionalPointableElement(gb);
             dhgb.ResetGrabOnGrabsUpdated = false;
             dhgb.HandAlignment = HandAlignType.None;
 
-
+            // âÒì]êßå¿ÇÇ»Ç≠Ç∑
             GrabFreeTransformer gftf = obj.AddComponent<GrabFreeTransformer>();
             TransformerUtils.ScaleConstraints constraints = new TransformerUtils.ScaleConstraints();
             constraints.ConstraintsAreRelative = true;
