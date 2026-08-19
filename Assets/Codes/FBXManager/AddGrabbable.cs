@@ -1,6 +1,7 @@
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
 using UnityEngine;
+using static Oculus.Interaction.TransformerUtils;
 
 public class AddGrabbable : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class AddGrabbable : MonoBehaviour
         // つかみ判定関係のコンポーネントを追加
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         rb.useGravity = false;
+        rb.isKinematic = true;
 
         if (rb != null)
         {
@@ -29,6 +31,24 @@ public class AddGrabbable : MonoBehaviour
             DistanceHandGrabInteractable dhgb = obj.AddComponent<DistanceHandGrabInteractable>();
             dhgb.InjectRigidbody(rb);
             dhgb.InjectOptionalPointableElement(gb);
+            dhgb.ResetGrabOnGrabsUpdated = false;
+            dhgb.HandAlignment = HandAlignType.None;
+
+
+            GrabFreeTransformer gftf = obj.AddComponent<GrabFreeTransformer>();
+            TransformerUtils.ScaleConstraints constraints = new TransformerUtils.ScaleConstraints();
+            constraints.ConstraintsAreRelative = true;
+            
+            TransformerUtils.ConstrainedAxis axis = new TransformerUtils.ConstrainedAxis();
+            axis.ConstrainAxis = false;
+            constraints.XAxis = axis;
+            constraints.YAxis = axis;
+            constraints.ZAxis = axis;
+
+            gftf.InjectOptionalScaleConstraints(constraints);
+            gb.InjectOptionalOneGrabTransformer(gftf);
+            gb.InjectOptionalTwoGrabTransformer(gftf);
+
 
         }
 
