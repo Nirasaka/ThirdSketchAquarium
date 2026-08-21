@@ -11604,12 +11604,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoidsManager
   mediumThreshold: 0.4
-  largeThreshold: 0.55
+  largeThreshold: 0.7
   separationWeight: 1.5
-  alignmentWeight: 1
+  alignmentWeight: 1.2
   cohesionWeight: 1
   neighborDistance: 0.5
-  detectionRange: 2
+  detectionRange: 1.3
   maxSpeed: 1.8
   minSpeed: 0.41
   rotationSpeed: 2.42

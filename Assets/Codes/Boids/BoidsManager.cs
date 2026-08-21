@@ -97,50 +97,77 @@ public class BoidsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (allFish.Count > 0)
+        if (allFish.Count <= 0) return;
+
+        foreach (FishAgent fish in allFish)
         {
-            foreach (FishAgent fish in allFish)
+            Vector3 direction = Vector3.zero;
+
+            // ƒ‰ƒ“ƒ_ƒ€‚È‘¬“x‚ðŠm—¦‚Å—^‚¦‚é
+            if(Random.Range(0, 100) < 5)
             {
-                Vector3 direction = Vector3.zero;
-
-                // ƒ‰ƒ“ƒ_ƒ€‚È‘¬“x‚ðŠm—¦‚Å—^‚¦‚é
-                if(Random.Range(0, 100) < 5)
-                {
-                    fish.speed = Random.Range(minSpeed, maxSpeed);
-                    fish.animator.SetFloat("TailSpeed", fish.speed);
-                }
-
-                // •”‰®‚Ì‘å˜g‚©‚çŠO‚ê‚½‚ç–ß‚·
-                if (!roomLimit.Contains(fish.transform.position))
-                {
-                    direction = roomLimit.center - fish.transform.position;
-                }
-                // •”‰®‚Ì’†‚É‚¢‚éê‡‚ÍŠeƒJƒeƒSƒŠ[‚²‚Æ‚É‰j‚ª‚¹‚é
-                else
-                {
-                    // ¬‚³‚È‹›‚ÍŒQ‚ê‚é
-                    if (fish.Category == SizeCategory.Small)
-                    {
-                        if (Random.Range(0, 100) < 20)
-                            direction = CalcBoid(fish);
-                    }
-                }
-
-                // ‰a‚ª‚ ‚ê‚Î‚»‚¿‚ç‚ÉŒü‚©‚¤
-                if (Feeding.isHandDetected)
-                {
-                    direction += TowardFeed(fish);
-                }
-                
-                // is•ûŒü‚ª’è‚Ü‚Á‚Ä‚¢‚ê‚ÎŠŠ‚ç‚©‚É‰ñ“]
-                if (direction != Vector3.zero)
-                {
-                    fish.transform.rotation = Quaternion.Slerp(fish.transform.rotation,
-                                            Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
-                }
-                // Œ»Ý‚Ì‘¬“x‚Å‘Oi
-                fish.transform.Translate(0, 0, fish.speed * Time.deltaTime);
+                fish.SetSpeed(Random.Range(minSpeed, maxSpeed));
             }
+
+            // •”‰®‚Ì‘å˜g‚©‚çŠO‚ê‚½‚ç–ß‚·
+            if (!roomLimit.Contains(fish.transform.position))
+            {
+                direction = roomLimit.center - fish.transform.position;
+            }
+            // •”‰®‚Ì’†‚É‚¢‚éê‡‚ÍŠeƒJƒeƒSƒŠ[‚²‚Æ‚É‰j‚ª‚¹‚é
+            else
+            {
+                // ¬‚³‚È‹›
+                if (fish.Category == SizeCategory.Small)
+                {
+                    // ‚»‚±‚»‚±ŒQ‚ê‚é
+                    if (Random.Range(0, 100) < 30)
+                        direction = CalcBoid(fish);
+
+                    if(Random.Range(0,100) < 30)
+                        direction = AwayFromFishInCategory(fish, SizeCategory.Medium);
+                }
+
+                // ’†‚­‚ç‚¢‚Ì‹›
+                if(fish.Category == SizeCategory.Medium)
+                {
+                    // ­‚µŒQ‚ê‚é
+                    if(Random.Range(0,100) < 15)
+                        direction = CalcBoid(fish);
+
+                    // ¬‚³‚¢‹›‚ðP‚¤
+                    if(Random.Range(0,100) < 50)
+                        direction += TowardFishInCategory(fish, SizeCategory.Small);
+                }
+
+                // ‘å‚«‚È‹›
+                if(fish.Category == SizeCategory.Large)
+                {
+                    if(Random.Range(0,100) < 10)
+                        direction = CalcBoid(fish);
+                }
+            }
+
+            // ‰a‚ª‚ ‚ê‚Î‚»‚¿‚ç‚ÉŒü‚©‚¤
+            if (Feeding.isHandDetected)
+            {
+                direction += TowardFeed(fish);
+            }
+
+            // ƒJƒƒ‰‚É‹ß‚·‚¬‚éê‡‚Í”ð‚¯‚é
+            if(Vector3.Distance(fish.transform.position, Camera.main.transform.position) <= 0.5)
+            {
+                direction += (fish.transform.position - Camera.main.transform.position);
+            }
+                
+            // is•ûŒü‚ª’è‚Ü‚Á‚Ä‚¢‚ê‚ÎŠŠ‚ç‚©‚É‰ñ“]
+            if (direction != Vector3.zero)
+            {
+                fish.transform.rotation = Quaternion.Slerp(fish.transform.rotation,
+                                        Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
+            }
+            // Œ»Ý‚Ì‘¬“x‚Å‘Oi
+            fish.transform.Translate(0, 0, fish.speed * Time.deltaTime);
         }
     }
 
@@ -153,6 +180,7 @@ public class BoidsManager : MonoBehaviour
         Vector3 direction = Vector3.zero;
         int neighborCount = 0;
 
+        // fish‚Æ“¯‚¶ƒJƒeƒSƒŠ‚Ì‹›‚Ì‚ÝŽQÆ‚³‚ê‚é
         foreach (FishAgent otherFish in fishGroups[fish.Category])
         {
             if(fish == otherFish) continue;
@@ -175,11 +203,11 @@ public class BoidsManager : MonoBehaviour
         {
             vCenter = vCenter / neighborCount * cohesionWeight;
             vAvoid *= separationWeight;
-            fish.speed = gSpeed / neighborCount;
+            fish.SetSpeed(gSpeed / neighborCount);
 
             if(fish.speed > maxSpeed)
             {
-                fish.speed = maxSpeed;
+                fish.SetSpeed(maxSpeed);
             }
 
             direction = ((vCenter + vAvoid) - fish.transform.position) * alignmentWeight;
@@ -192,29 +220,46 @@ public class BoidsManager : MonoBehaviour
     {
 
         Vector3 direction = Vector3.zero;
-        Vector3 vAvoid = Vector3.zero;
-        float neighborCount = 0;
-
-        foreach(FishAgent otherFish in allFish)
-        {
-            if(fish == otherFish) continue;
-
-            float distance = Vector3.Distance(fish.transform.position, otherFish.transform.position);
-            if (distance <= detectionRange)
-            {
-                neighborCount++;
-                if (distance < neighborDistance)
-                {
-                    vAvoid += (fish.transform.position - otherFish.transform.position);
-                }
-            }
-        }
-
-
 
         Vector3 feedDirection = target.transform.position - fish.transform.position;
         if (feedDirection.magnitude >= feed_distance)
-            direction = (vAvoid * separationWeight - fish.transform.position) + feedDirection * targetFollowWeight;
+            direction = feedDirection * targetFollowWeight;
+
+        return direction;
+    }
+
+    // “Á’è‚ÌƒJƒeƒSƒŠ‚©‚ç“¦‚°‚é
+    Vector3 AwayFromFishInCategory(FishAgent fish, SizeCategory category)
+    {
+        Vector3 direction = Vector3.zero;
+
+        foreach (FishAgent targetFish in fishGroups[category])
+        {
+            Vector3 awayDirection = (fish.transform.position - targetFish.transform.position);
+            if (awayDirection.magnitude <= detectionRange)
+            {
+                direction += awayDirection * (1.0f - awayDirection.magnitude / detectionRange);
+                fish.SetSpeed(Random.Range(minSpeed + 0.7f, maxSpeed + 0.7f));
+            }
+        }
+
+        return direction;
+    }
+
+    // “Á’è‚ÌƒJƒeƒSƒŠ‚Ì‹›‚ð’Ç‚¤
+    Vector3 TowardFishInCategory(FishAgent fish, SizeCategory category)
+    {
+        Vector3 direction = Vector3.zero;
+
+        foreach(FishAgent targetFish in fishGroups[category])
+        {
+            Vector3 targetDirection = (targetFish.transform.position - fish.transform.position);
+            if(targetDirection.magnitude <= detectionRange)
+            {
+                direction += targetDirection * targetFollowWeight;
+                fish.SetSpeed(Random.Range(minSpeed+0.5f, maxSpeed+0.5f));
+            }
+        }
 
         return direction;
     }

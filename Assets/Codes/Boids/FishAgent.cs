@@ -48,4 +48,10 @@ public class FishAgent : MonoBehaviour
         return Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
     }
 
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+        this.animator.SetFloat("TailSpeed", speed);
+    }
+
 }
