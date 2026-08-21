@@ -11608,10 +11608,10 @@ MonoBehaviour:
   separationWeight: 1.5
   alignmentWeight: 1.2
   cohesionWeight: 1
-  neighborDistance: 0.5
-  detectionRange: 1.3
-  maxSpeed: 1.8
-  minSpeed: 0.41
+  neighborDistance: 0.2
+  detectionRange: 1.5
+  maxSpeed: 1.2
+  minSpeed: 0.2
   rotationSpeed: 2.42
   obstacleAvoidanceWeight: 2
   obstacleDetectionDistance: 1

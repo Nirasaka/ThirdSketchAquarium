@@ -121,10 +121,11 @@ public class BoidsManager : MonoBehaviour
                 if (fish.Category == SizeCategory.Small)
                 {
                     // ‚»‚±‚»‚±ŒQ‚ê‚é
-                    if (Random.Range(0, 100) < 30)
+                    if (Random.Range(0, 100) < 40)
                         direction = CalcBoid(fish);
 
-                    if(Random.Range(0,100) < 30)
+                    // ’†‚­‚ç‚¢‚Ì‹›‚©‚ç“¦‚°‚é
+                    if(Random.Range(0,100) < 30 && !Feeding.isHandDetected)
                         direction = AwayFromFishInCategory(fish, SizeCategory.Medium);
                 }
 
@@ -132,11 +133,11 @@ public class BoidsManager : MonoBehaviour
                 if(fish.Category == SizeCategory.Medium)
                 {
                     // ­‚µŒQ‚ê‚é
-                    if(Random.Range(0,100) < 15)
+                    if(Random.Range(0,100) < 20)
                         direction = CalcBoid(fish);
 
                     // ¬‚³‚¢‹›‚ðP‚¤
-                    if(Random.Range(0,100) < 50)
+                    if(Random.Range(0,100) < 50 && !Feeding.isHandDetected)
                         direction += TowardFishInCategory(fish, SizeCategory.Small);
                 }
 
