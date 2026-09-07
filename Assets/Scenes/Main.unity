@@ -3416,7 +3416,7 @@ GameObject:
   - component: {fileID: 423294494}
   - component: {fileID: 423294493}
   m_Layer: 0
-  m_Name: LeftRock&Roll
+  m_Name: ShowAdminMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11162,7 +11162,7 @@ GameObject:
   - component: {fileID: 1541752797}
   - component: {fileID: 1541752796}
   m_Layer: 0
-  m_Name: LeftGunPose
+  m_Name: ToggleButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11230,7 +11230,7 @@ MonoBehaviour:
   _hand: {fileID: 2136031406}
   _fingerFeatureStateProvider: {fileID: 2136031405}
   _shapes:
-  - {fileID: 11400000, guid: 49a831279202b0246a7a3aba4e5a4562, type: 2}
+  - {fileID: 11400000, guid: cf9848654ae5aae41b3e42825ec021f5, type: 2}
 --- !u!1 &1593051659
 GameObject:
   m_ObjectHideFlags: 0
@@ -11605,6 +11605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoidsManager
   mediumThreshold: 0.4
   largeThreshold: 0.7
+  thresholdGap: 0.1
   separationWeight: 1.5
   alignmentWeight: 1.2
   cohesionWeight: 1
@@ -13063,7 +13064,7 @@ GameObject:
   - component: {fileID: 2013308264}
   - component: {fileID: 2013308262}
   m_Layer: 0
-  m_Name: RightOpen
+  m_Name: ShowFeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

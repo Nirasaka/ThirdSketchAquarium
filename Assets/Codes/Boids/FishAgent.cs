@@ -1,3 +1,4 @@
+using Oculus.Interaction;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -5,6 +6,9 @@ public class FishAgent : MonoBehaviour
 {
     public SizeCategory Category = SizeCategory.Small;
     public Animator animator;
+
+    private Grabbable gb;
+    private bool isTwoGrabbed;
 
     // 速度ベクトル
     public float speed;
@@ -16,18 +20,36 @@ public class FishAgent : MonoBehaviour
         BoidsManager.Instance.RegistFish(this);
 
         animator = GetComponent<Animator>();
+
+        gb = GetComponent<Grabbable>(); 
     }
 
     void Update()
     {
-        Categorize();
+        if (isTwoGrabbed)
+        {
+            if(gb.PointsCount < 2)
+            {
+                Categorize();
+                isTwoGrabbed = false;
+            }
+        }
+        else
+        {
+            if(gb.PointsCount >= 2)
+            {
+                isTwoGrabbed = true;
+            }
+        }
     }
+
 
     public void Categorize()
     {
-        float size = GetSize();
+        // サイズの閾値のギャップにいる場合は調整
+        this.gameObject.transform.localScale *= BoidsManager.Instance.BridgeSizeGap(GetSize());
 
-        SizeCategory newCategory = BoidsManager.Instance.GetCategory(size);
+        SizeCategory newCategory = BoidsManager.Instance.GetCategory(GetSize());
 
         if (Category != newCategory)
         {

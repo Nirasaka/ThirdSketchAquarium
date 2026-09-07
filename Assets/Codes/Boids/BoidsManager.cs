@@ -25,6 +25,9 @@ public class BoidsManager : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float largeThreshold;
 
+    [Range(0.0f, 0.5f)]
+    public float thresholdGap;
+
     [Header("Boidsの設定")]
     [Range(0.0f, 2.0f)]
     public float separationWeight;
@@ -49,12 +52,12 @@ public class BoidsManager : MonoBehaviour
     [Range(1.0f, 5.0f)]
     public float rotationSpeed;
 
-    [Header("障害物回避の設定")]
+    [Header("壁回避の設定")]
     [Range(0.0f, 2.0f)]
-    public float obstacleAvoidanceWeight;
+    public float boundaryAvoidanceWeight;
 
     [Range(0.0f, 2.0f)]
-    public float obstacleDetectionDistance;
+    public float boundaryAvoidanceDistance;
 
     public Bounds roomLimit;
 
@@ -109,45 +112,46 @@ public class BoidsManager : MonoBehaviour
                 fish.SetSpeed(Random.Range(minSpeed, maxSpeed));
             }
 
-            // 部屋の大枠から外れたら戻す
-            if (!roomLimit.Contains(fish.transform.position))
+            // 各カテゴリーごとに泳がせる
+            // 小さな魚
+            if (fish.Category == SizeCategory.Small)
             {
-                direction = roomLimit.center - fish.transform.position;
+                // そこそこ群れる
+                if (Random.Range(0, 100) < 40)
+                    direction = CalcBoid(fish);
+
+                // 中くらいの魚から逃げる
+                if(Random.Range(0,100) < 30 && !Feeding.isHandDetected)
+                    direction = AwayFromFishInCategory(fish, SizeCategory.Medium);
             }
-            // 部屋の中にいる場合は各カテゴリーごとに泳がせる
-            else
+
+            // 中くらいの魚
+            if(fish.Category == SizeCategory.Medium)
             {
-                // 小さな魚
-                if (fish.Category == SizeCategory.Small)
+                // 少し群れる
+                if(Random.Range(0,100) < 20)
+                    direction = CalcBoid(fish);
+
+                // 小さい魚を襲う
+                if(Random.Range(0,100) < 50 && !Feeding.isHandDetected)
+                    direction += TowardFishInCategory(fish, SizeCategory.Small);
+            }
+
+            // 大きな魚
+            if(fish.Category == SizeCategory.Large)
+            {
+                if(Random.Range(0,100) < 10)
+                    direction = CalcBoid(fish);
+
+                if(Random.Range(0, 100) < 10)
                 {
-                    // そこそこ群れる
-                    if (Random.Range(0, 100) < 40)
-                        direction = CalcBoid(fish);
-
-                    // 中くらいの魚から逃げる
-                    if(Random.Range(0,100) < 30 && !Feeding.isHandDetected)
-                        direction = AwayFromFishInCategory(fish, SizeCategory.Medium);
-                }
-
-                // 中くらいの魚
-                if(fish.Category == SizeCategory.Medium)
-                {
-                    // 少し群れる
-                    if(Random.Range(0,100) < 20)
-                        direction = CalcBoid(fish);
-
-                    // 小さい魚を襲う
-                    if(Random.Range(0,100) < 50 && !Feeding.isHandDetected)
-                        direction += TowardFishInCategory(fish, SizeCategory.Small);
-                }
-
-                // 大きな魚
-                if(fish.Category == SizeCategory.Large)
-                {
-                    if(Random.Range(0,100) < 10)
-                        direction = CalcBoid(fish);
+                    fish.SetSpeed(Random.Range(minSpeed - 0.5f, maxSpeed - 0.5f));
                 }
             }
+
+
+            // 部屋の外に出ないように壁を避ける
+            direction += ContainFish(fish);
 
             // 餌があればそちらに向かう
             if (Feeding.isHandDetected)
@@ -265,6 +269,72 @@ public class BoidsManager : MonoBehaviour
         return direction;
     }
 
+    // 部屋の枠外に出ないようにする
+    Vector3 ContainFish(FishAgent fish)
+    {
+        Vector3 direction = Vector3.zero;
+
+        // safety
+        if (roomLimit.size == Vector3.zero) return direction;
+
+        Vector3 pos = fish.transform.position;
+
+        // 部屋の外に出ている場合は強めに中心へ戻す
+        if (!roomLimit.Contains(pos))
+        {
+            Vector3 toCenter = (roomLimit.center - pos);
+            direction = toCenter.normalized * boundaryAvoidanceWeight;
+            // 速度も若干高めにして早く戻す
+            fish.SetSpeed(Mathf.Min(maxSpeed, fish.speed + 1.0f));
+            return direction;
+        }
+
+        // 部屋内部：各面までの距離を計算し、最短の面に近いほどその面の内向き法線を強く返す
+        Vector3 local = pos - roomLimit.center;
+        Vector3 ext = roomLimit.extents;
+
+        float distPosX = ext.x - local.x;
+        float distNegX = ext.x + local.x;
+        float distPosY = ext.y - local.y;
+        float distNegY = ext.y + local.y;
+        float distPosZ = ext.z - local.z;
+        float distNegZ = ext.z + local.z;
+
+        // 最小距離と面を選択
+        float minDist = distPosX;
+        int face = 0; // 0:+X,1:-X,2:+Y,3:-Y,4:+Z,5:-Z
+        if (distNegX < minDist) { minDist = distNegX; face = 1; }
+        if (distPosY < minDist) { minDist = distPosY; face = 2; }
+        if (distNegY < minDist) { minDist = distNegY; face = 3; }
+        if (distPosZ < minDist) { minDist = distPosZ; face = 4; }
+        if (distNegZ < minDist) { minDist = distNegZ; face = 5; }
+
+        // 閾値より近ければ回避力を与える
+        if (minDist <= boundaryAvoidanceDistance)
+        {
+            Vector3 inward = Vector3.zero;
+            switch (face)
+            {
+                case 0: inward = Vector3.left; break;  // +X 面 -> 内向きは -X
+                case 1: inward = Vector3.right; break; // -X 面 -> 内向きは +X
+                case 2: inward = Vector3.down; break;  // +Y 面 -> 内向きは -Y
+                case 3: inward = Vector3.up; break;    // -Y 面 -> 内向きは +Y
+                case 4: inward = Vector3.back; break;  // +Z 面 -> 内向きは -Z
+                case 5: inward = Vector3.forward; break; // -Z 面 -> 内向きは +Z
+            }
+
+            // 距離に応じた重み（面に近いほど 0..1 の t が大きくなる）
+            float t = 1.0f - Mathf.Clamp01(minDist / boundaryAvoidanceDistance);
+            direction = inward * (t * boundaryAvoidanceWeight);
+
+            // 角（複数面が近い場合）での安定化のため、中心方向を少し混ぜる
+            Vector3 towardCenter = (roomLimit.center - pos).normalized;
+            direction += towardCenter * (0.3f * t * boundaryAvoidanceWeight);
+        }
+
+        return direction;
+    }
+
     // 魚の追加
     public void RegistFish(FishAgent fish)
     {
@@ -329,6 +399,33 @@ public class BoidsManager : MonoBehaviour
             return SizeCategory.Medium;
         return SizeCategory.Large;
     }
+
+    public float BridgeSizeGap(float size)
+    {
+        if(mediumThreshold - thresholdGap / 2 < size && size < mediumThreshold)
+        {
+            return (mediumThreshold - thresholdGap / 2) / size;
+        }
+        
+        else if(mediumThreshold <= size && size < mediumThreshold + thresholdGap / 2)
+        {
+            return (mediumThreshold + thresholdGap / 2) / size;
+        }
+
+        if(largeThreshold -  thresholdGap / 2 < size && size < largeThreshold)
+        {
+            return (largeThreshold - thresholdGap / 2) / size;
+        }
+
+        else if(largeThreshold <= size && size < largeThreshold + thresholdGap / 2)
+        {
+            return (largeThreshold + thresholdGap / 2) / size;
+        }
+
+
+        return 1;
+    }
+
 
     public int CountFish()
     {

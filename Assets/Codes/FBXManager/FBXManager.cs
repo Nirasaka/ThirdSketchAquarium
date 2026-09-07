@@ -305,10 +305,6 @@ namespace TriLibCore.Samples
             Animator anim = obj.AddComponent<Animator>();
             anim.runtimeAnimatorController = controller;
 
-            // エージェント化
-            obj.AddComponent<FishAgent>();
-
-
             // シェーダー変更
             foreach(var mat in smr.materials)
             {
@@ -323,6 +319,9 @@ namespace TriLibCore.Samples
             obj.GetComponent<BoxCollider>().excludeLayers = LayerMask.GetMask("Player");
 
             obj.AddComponent<AddGrabbable>();
+
+            // エージェント化
+            obj.AddComponent<FishAgent>();
 
             // カメラの前に配置
             UnityEngine.Camera mainCamera = UnityEngine.Camera.main;
