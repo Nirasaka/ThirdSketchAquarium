@@ -113,43 +113,45 @@ public class BoidsManager : MonoBehaviour
             }
 
             // ŠeƒJƒeƒSƒŠ[‚²‚Æ‚É‰j‚ª‚¹‚é
-            // ¬‚³‚È‹›
-            if (fish.Category == SizeCategory.Small)
+            if (roomLimit.Contains(fish.transform.position))
             {
-                // ‚»‚±‚»‚±ŒQ‚ê‚é
-                if (Random.Range(0, 100) < 40)
-                    direction = CalcBoid(fish);
-
-                // ’†‚­‚ç‚¢‚Ì‹›‚©‚ç“¦‚°‚é
-                if(Random.Range(0,100) < 30 && !Feeding.isHandDetected)
-                    direction = AwayFromFishInCategory(fish, SizeCategory.Medium);
-            }
-
-            // ’†‚­‚ç‚¢‚Ì‹›
-            if(fish.Category == SizeCategory.Medium)
-            {
-                // ­‚µŒQ‚ê‚é
-                if(Random.Range(0,100) < 20)
-                    direction = CalcBoid(fish);
-
-                // ¬‚³‚¢‹›‚ğP‚¤
-                if(Random.Range(0,100) < 50 && !Feeding.isHandDetected)
-                    direction += TowardFishInCategory(fish, SizeCategory.Small);
-            }
-
-            // ‘å‚«‚È‹›
-            if(fish.Category == SizeCategory.Large)
-            {
-                if(Random.Range(0,100) < 10)
-                    direction = CalcBoid(fish);
-
-                if(Random.Range(0, 100) < 10)
+                // ¬‚³‚È‹›
+                if (fish.Category == SizeCategory.Small)
                 {
-                    fish.SetSpeed(Random.Range(minSpeed - 0.5f, maxSpeed - 0.5f));
+                    // ‚»‚±‚»‚±ŒQ‚ê‚é
+                    if (Random.Range(0, 100) < 40)
+                        direction = CalcBoid(fish);
+
+                    // ’†‚­‚ç‚¢‚Ì‹›‚©‚ç“¦‚°‚é
+                    if (Random.Range(0, 100) < 30 && !Feeding.isHandDetected)
+                        direction = AwayFromFishInCategory(fish, SizeCategory.Medium);
+                }
+
+                // ’†‚­‚ç‚¢‚Ì‹›
+                if (fish.Category == SizeCategory.Medium)
+                {
+                    // ­‚µŒQ‚ê‚é
+                    if (Random.Range(0, 100) < 20)
+                        direction = CalcBoid(fish);
+
+                    // ¬‚³‚¢‹›‚ğP‚¤
+                    if (Random.Range(0, 100) < 50 && !Feeding.isHandDetected)
+                        direction += TowardFishInCategory(fish, SizeCategory.Small);
+                }
+
+                // ‘å‚«‚È‹›
+                if (fish.Category == SizeCategory.Large)
+                {
+                    if (Random.Range(0, 100) < 10)
+                        direction = CalcBoid(fish);
+
+                    if (Random.Range(0, 100) < 10)
+                    {
+                        fish.SetSpeed(Random.Range(minSpeed - 0.5f, maxSpeed - 0.5f));
+                    }
                 }
             }
-
-
+            
             // •”‰®‚ÌŠO‚Éo‚È‚¢‚æ‚¤‚É•Ç‚ğ”ğ‚¯‚é
             direction += ContainFish(fish);
 
