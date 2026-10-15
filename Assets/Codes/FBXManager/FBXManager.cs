@@ -132,6 +132,8 @@ namespace TriLibCore.Samples
             request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
 
+            request.timeout = 2; // タイムアウトを2秒に設定
+
             yield return request.SendWebRequest();
 
             if (request.result != UnityWebRequest.Result.Success)
