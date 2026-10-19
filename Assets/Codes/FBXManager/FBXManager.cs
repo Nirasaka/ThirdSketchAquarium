@@ -88,6 +88,15 @@ namespace TriLibCore.Samples
             }
         }
 
+        public void ClearCache()
+        {
+            foreach (string file in Directory.GetFiles(cacheDir, "*.zip"))
+            {
+                File.Delete(file);
+            }
+            hashList.Clear();
+        }
+
         /// <summary>
         /// Unity’s Start method which is called on the frame when the script is enabled just before
         /// any of the Update methods are called for the first time.
@@ -310,7 +319,8 @@ namespace TriLibCore.Samples
             // シェーダー変更
             foreach(var mat in smr.materials)
             {
-                mat.shader = Shader.Find("Custom/CutOffOcclusionLit");
+                mat.shader = Shader.Find("Custom/CutOffOcclusionLit"); // オリジナルシェーダー
+                //mat.shader = Shader.Find("Meta/EnvironmentDepth/Built-in Render Pipeline/OcclusionUnlit"); // Metaのシェーダー
             }
 
             // コライダー付与
